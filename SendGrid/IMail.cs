@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Net.Mail;
+using System.Net.Mime;
 
 namespace SendGrid
 {
@@ -13,28 +14,71 @@ namespace SendGrid
 
         #region Properties
 
+		/// <summary>
+		/// Gets the attachment collection used to store data attached to this e-mail message. 
+		/// </summary>
         string[] Attachments { get; set; }
-        
+
+		/// <summary>
+		/// Gets the address collection that contains the blind carbon copy (BCC) recipients for this e-mail message. 
+		/// </summary>
         MailAddress[] Bcc { get; }
 
+		/// <summary>
+		/// Gets the address collection that contains the carbon copy (CC) recipients for this e-mail message. 
+		/// </summary>
         MailAddress[] Cc { get; }
-        
+
+		/// <summary>
+		/// Gets or sets the from address for this e-mail message. 
+		/// </summary>
         MailAddress From { get; set; }
 
+		/// <summary>
+		/// Gets the IHeader that is used to build the Headers that are transmitted with this e-mail message. 
+		/// </summary>
         IHeader Header { get; set; }
 
+		/// <summary>
+		/// Gets the e-mail headers that are transmitted with this e-mail message. 
+		/// </summary>
         Dictionary<string, string> Headers { get; set; }
 
+		/// <summary>
+		/// The HTML Body for the message.
+		/// </summary>
         string Html { get; set; }
 
+		/// <summary>
+		/// The Transfer encoding to send the HTML body for the message. Used only by SMTP api.
+		/// </summary>
+		TransferEncoding HtmlTransferEncoding { get; set; }
+
+		/// <summary>
+		/// Gets or sets the list of addresses to reply to for the mail message. 
+		/// </summary>
         MailAddress[] ReplyTo { get; set; }
 
         Dictionary<string, MemoryStream> StreamedAttachments { get; set; }
 
+		/// <summary>
+		/// Gets or sets the subject line for this e-mail message. 
+		/// </summary>
         string Subject { get; set; }
 
+		/// <summary>
+		/// The text body for the message.
+		/// </summary>
         string Text { get; set; }
 
+		/// <summary>
+		/// The Transfer encoding to send the text body for the message. Used only by SMTP api.
+		/// </summary>
+		TransferEncoding TextTransferEncoding { get; set; }
+
+		/// <summary>
+		///  Gets the address collection that contains the recipients of this e-mail message.  
+		/// </summary>
         MailAddress[] To { get; set; }
 
         #endregion
