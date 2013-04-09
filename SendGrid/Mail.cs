@@ -102,6 +102,11 @@ namespace SendGrid
         /// </summary>
         public string Html { get; set; }
 
+		/// <summary>
+		/// The Transfer encoding to send the HTML body for the message. Used only by SMTP api.
+		/// </summary>
+		public TransferEncoding HtmlTransferEncoding { get; set; }
+
         /// <summary>
         /// Gets or sets the list of addresses to reply to for the mail message. 
         /// </summary>
@@ -140,6 +145,11 @@ namespace SendGrid
         /// The text body for the message.
         /// </summary>
         public string Text { get; set; }
+
+		/// <summary>
+		/// The Transfer encoding to send the text body for the message. Used only by SMTP api.
+		/// </summary>
+		public TransferEncoding TextTransferEncoding { get; set; }
 
         /// <summary>
         ///  Gets the address collection that contains the recipients of this e-mail message.  
@@ -201,6 +211,8 @@ namespace SendGrid
 
             Text = text;
             Html = html;
+			TextTransferEncoding = TransferEncoding.SevenBit;
+			HtmlTransferEncoding = TransferEncoding.SevenBit;
         }
 
         internal Mail(IHeader header)
@@ -208,6 +220,8 @@ namespace SendGrid
             _message = new MailMessage();
             Header = header;
             Headers = new Dictionary<string, string>();
+			TextTransferEncoding = TransferEncoding.SevenBit;
+			HtmlTransferEncoding = TransferEncoding.SevenBit;
         }
 
         private static Dictionary<string, string> InitializeFilters()
@@ -689,12 +703,14 @@ namespace SendGrid
             if (Text != null)
             {
                 AlternateView plainView = AlternateView.CreateAlternateViewFromString(Text, null, "text/plain");
+				plainView.TransferEncoding = TextTransferEncoding;
                 _message.AlternateViews.Add(plainView);
             }
 
             if (Html != null)
             {
                 AlternateView htmlView = AlternateView.CreateAlternateViewFromString(Html, null, "text/html");
+				htmlView.TransferEncoding = HtmlTransferEncoding;
                 _message.AlternateViews.Add(htmlView);
             }
             
