@@ -43,7 +43,7 @@ namespace SendGrid
         /// <summary>
         /// 3 digit status code. Applies to the Bounce event.
         /// </summary>
-        public int Status { get; set; }
+        public string Status { get; set; }
 
         /// <summary>
         /// Applies to the Bounce event.
