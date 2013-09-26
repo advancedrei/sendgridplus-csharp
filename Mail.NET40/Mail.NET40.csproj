@@ -67,6 +67,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Mail.NET45\Attachment.cs">
+      <Link>Attachment.cs</Link>
+    </Compile>
     <Compile Include="..\Mail.NET45\EventData.cs">
       <Link>EventData.cs</Link>
     </Compile>

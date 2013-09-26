@@ -27,8 +27,7 @@ namespace SendGrid
         const string Charset = "utf-8";
         private const string ReText = @"<\%\s*\%>";
         private const string ReHtml = @"<\%\s*[^\s]+\s*\%>";
-        private List<string> _attachments = new List<string>();
-        private Dictionary<string, MemoryStream> _streamedAttachments = new Dictionary<string, MemoryStream>();
+        private List<AttachmentBase> _attachments = new List<AttachmentBase>();
 
         #endregion
 
@@ -37,7 +36,7 @@ namespace SendGrid
         /// <summary>
         /// Gets the attachment collection used to store data attached to this e-mail message. 
         /// </summary>
-        public string[] Attachments
+        public AttachmentBase[] Attachments
         {
             get { return _attachments.ToArray(); }
             set { _attachments = value.ToList(); }
@@ -118,15 +117,6 @@ namespace SendGrid
                     _message.ReplyToList.Add(replyTo);
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public Dictionary<string, MemoryStream> StreamedAttachments
-        {
-            get { return _streamedAttachments; }
-            set { _streamedAttachments = value; }
         }
 
         /// <summary>
@@ -401,7 +391,30 @@ namespace SendGrid
             var ms = new MemoryStream();
             stream.CopyTo(ms);
 			ms.Seek(0,SeekOrigin.Begin);
-            StreamedAttachments[name] = ms;
+            _attachments.Add(new StreamAttachment
+            {
+                Name = name,
+                Stream = ms
+            });
+        }
+
+        /// <summary>
+        /// Add a stream as an attachment to the message
+        /// </summary>
+        /// <param name="stream">Stream of file to be attached</param>
+        /// <param name="name">Name of file to be attached</param>
+        /// <param name="contentType">Content type of stream</param>
+        public void AddAttachment(Stream stream, string name, string contentType)
+        {
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            _attachments.Add(new StreamAttachment
+            {
+                Name = name,
+                Stream = ms,
+                ContentType = contentType
+            });
         }
 
         /// <summary>
@@ -410,7 +423,10 @@ namespace SendGrid
         /// <param name="filePath">a fully qualified file path as a string</param>
         public void AddAttachment(string filePath)
         {
-            _attachments.Add(filePath);
+            _attachments.Add(new FileAttachment
+            {
+                FilePath = filePath
+            });
         }
 
         /// <summary>
@@ -690,17 +706,21 @@ namespace SendGrid
             {
                 foreach (var attachment in Attachments)
                 {
-                    _message.Attachments.Add(new Attachment(attachment, MediaTypeNames.Application.Octet));
-                }                
-            }
+                    if (attachment is FileAttachment)
+                    {
+                        var fileAttachment = (FileAttachment)attachment;
 
-            if(StreamedAttachments != null)
-            {
-                foreach (var attachment in StreamedAttachments)
-                {
-                    attachment.Value.Position = 0;
-                    _message.Attachments.Add(new Attachment(attachment.Value, attachment.Key));
-                }
+                        _message.Attachments.Add(new Attachment(fileAttachment.FilePath, fileAttachment.ContentType));
+                    }
+                    else if (attachment is StreamAttachment)
+                    {
+                        var streamAttachment = (StreamAttachment)attachment;
+
+                        _message.Attachments.Add(new Attachment(streamAttachment.Stream, streamAttachment.Name, streamAttachment.ContentType));
+                    }
+                    else
+                        throw new NotImplementedException("Unknown attachment type");
+                }                
             }
 
             if (Text != null)

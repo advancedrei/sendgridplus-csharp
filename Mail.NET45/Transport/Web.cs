@@ -57,7 +57,7 @@ namespace SendGrid.Transport
 
             var content = new MultipartFormDataContent();
             AttachFormParams(message, content);
-            AttachFiles(message, content);
+            AttachAttachments(message, content);
             var response = client.PostAsync(Endpoint + ".xml", content).Result;
             CheckForErrors(response);
         }
@@ -73,39 +73,42 @@ namespace SendGrid.Transport
             }
         }
 
-        private void AttachFiles(IMail message, MultipartFormDataContent content)
+        private void AttachAttachments(IMail message, MultipartFormDataContent content)
         {
-            var files = FetchFileBodies(message);
-            foreach (var file in files)
+            foreach (var attachment in message.Attachments)
             {
-                var fs = new FileStream(file.Key, FileMode.Open, FileAccess.Read);
-                var fileContent = new StreamContent(fs);
+                StreamContent streamContent = null;
 
-                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                if (attachment is FileAttachment)
                 {
-                    Name = "files[" + Path.GetFileName(file.Key) + "]",
-                    FileName = Path.GetFileName(file.Key)
-                };
+                    var fileAttachment = (FileAttachment)attachment;
 
-                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
-                content.Add(fileContent);
-            }
+                    var fs = new FileStream(fileAttachment.FilePath, FileMode.Open, FileAccess.Read);
+                    streamContent = new StreamContent(fs);
 
-            var streamingFiles = FetchStreamingFileBodies(message);
-            foreach (KeyValuePair<string, MemoryStream> file in streamingFiles)
-            {
-                var name = file.Key;
-                var stream = file.Value;
-                var fileContent = new StreamContent(stream);
-
-                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = "files[" + Path.GetFileName(fileAttachment.FilePath) + "]",
+                        FileName = Path.GetFileName(fileAttachment.FilePath)
+                    };
+                }
+                else if (attachment is StreamAttachment)
                 {
-                    Name = "files[" + Path.GetFileName(file.Key) + "]",
-                    FileName = Path.GetFileName(file.Key)
-                };
+                    var streamAttachment = (StreamAttachment)attachment;
 
-                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
-                content.Add(fileContent);
+                    streamContent = new StreamContent(streamAttachment.Stream);
+
+                    streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = streamAttachment.Name,
+                        FileName = streamAttachment.Name
+                    };
+                }
+                else
+                    throw new NotImplementedException("Unknown attachment type");
+                
+                streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse(attachment.ContentType);
+                content.Add(streamContent);
             }
         }
 
@@ -177,18 +180,6 @@ namespace SendGrid.Transport
                     .ToList();
             }
             return result.Where(r => !string.IsNullOrEmpty(r.Value)).ToList();
-        }
-
-        internal List<KeyValuePair<string, MemoryStream>> FetchStreamingFileBodies(IMail message)
-        {
-            return message.StreamedAttachments.Select(kvp => kvp).ToList();
-        }
-
-        internal List<KeyValuePair<string, FileInfo>> FetchFileBodies(IMail message)
-        {
-            if (message.Attachments == null)
-                return new List<KeyValuePair<string, FileInfo>>();
-            return message.Attachments.Select(name => new KeyValuePair<string, FileInfo>(name, new FileInfo(name))).ToList();
         }
 
         #endregion
