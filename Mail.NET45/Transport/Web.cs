@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Xml;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace SendGrid.Transport
 {
@@ -50,6 +51,15 @@ namespace SendGrid.Transport
         /// <param name="message"></param>
         public void Deliver(IMail message)
         {
+            DeliverAsync(message).Wait();
+        }
+
+        /// <summary>
+        /// Delivers a message over SendGrid's Web interface
+        /// </summary>
+        /// <param name="message"></param>
+        public Task DeliverAsync(IMail message)
+        {
             var client = new HttpClient
             {
                 BaseAddress = _https ? new Uri("https://" + BaseUrl) : new Uri("http://" + BaseUrl)
@@ -58,8 +68,14 @@ namespace SendGrid.Transport
             var content = new MultipartFormDataContent();
             AttachFormParams(message, content);
             AttachFiles(message, content);
-            var response = client.PostAsync(Endpoint + ".xml", content).Result;
-            CheckForErrors(response);
+            var postTask = client.PostAsync(Endpoint + ".xml", content);
+
+            postTask.ContinueWith(task =>
+                {
+                    CheckForErrors(task.Result);
+                });
+
+            return postTask;
         }
 
         #region Support Methods
