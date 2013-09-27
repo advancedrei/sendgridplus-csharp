@@ -391,11 +391,7 @@ namespace SendGrid
             var ms = new MemoryStream();
             stream.CopyTo(ms);
 			ms.Seek(0,SeekOrigin.Begin);
-            _attachments.Add(new StreamAttachment
-            {
-                Name = name,
-                Stream = ms
-            });
+            _attachments.Add(new StreamAttachment(ms, name));
         }
 
         /// <summary>
@@ -409,12 +405,31 @@ namespace SendGrid
             var ms = new MemoryStream();
             stream.CopyTo(ms);
             ms.Seek(0, SeekOrigin.Begin);
-            _attachments.Add(new StreamAttachment
+            var attachment = new StreamAttachment(ms, name)
             {
-                Name = name,
-                Stream = ms,
                 ContentType = contentType
-            });
+            };
+            _attachments.Add(attachment);
+        }
+
+        /// <summary>
+        /// Add a stream as an attachment to the message
+        /// </summary>
+        /// <param name="stream">Stream of file to be attached</param>
+        /// <param name="name">Name of file to be attached</param>
+        /// <param name="contentType">Content type of stream</param>
+        /// <param name="contentId">ContentId for embedding images</param>
+        public void AddAttachment(Stream stream, string name, string contentType, string contentId)
+        {
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            var attachment = new StreamAttachment(ms, name)
+            {
+                ContentType = contentType,
+                ContentId = contentId
+            };
+            _attachments.Add(attachment);
         }
 
         /// <summary>
@@ -423,10 +438,7 @@ namespace SendGrid
         /// <param name="filePath">a fully qualified file path as a string</param>
         public void AddAttachment(string filePath)
         {
-            _attachments.Add(new FileAttachment
-            {
-                FilePath = filePath
-            });
+            _attachments.Add(new FileAttachment(filePath));
         }
 
         /// <summary>

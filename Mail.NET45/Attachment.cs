@@ -8,16 +8,25 @@ namespace SendGrid
     public abstract class AttachmentBase
     {
         public string ContentType { get; set; }
+        public abstract Stream GetStream();
+        public string Name { get; set; }
+        public string ContentId { get; set; }
     }
     
     public class StreamAttachment : AttachmentBase
     {
-        public MemoryStream Stream { get; set; }
-        public string Name { get; set; }
+        public Stream Stream { get; set; }
 
-        public StreamAttachment()
+        public StreamAttachment(Stream stream, string name)
         {
+            Name = name;
+            Stream = stream;
             ContentType = MediaTypeNames.Application.Octet;
+        }
+
+        public override Stream GetStream()
+        {
+            return Stream;
         }
     }
 
@@ -25,9 +34,16 @@ namespace SendGrid
     {
         public string FilePath { get; set; }
 
-        public FileAttachment()
+        public FileAttachment(string filePath)
         {
+            FilePath = filePath;
+            Name = Path.GetFileName(filePath);
             ContentType = MediaTypeNames.Application.Octet;
+        }
+
+        public override Stream GetStream()
+        {
+            return new FileStream(FilePath, FileMode.Open, FileAccess.Read);
         }
     }
 }

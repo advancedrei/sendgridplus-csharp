@@ -77,38 +77,23 @@ namespace SendGrid.Transport
         {
             foreach (var attachment in message.Attachments)
             {
-                StreamContent streamContent = null;
+                var streamContent = new StreamContent(attachment.GetStream());
 
-                if (attachment is FileAttachment)
+                streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                 {
-                    var fileAttachment = (FileAttachment)attachment;
-
-                    var fs = new FileStream(fileAttachment.FilePath, FileMode.Open, FileAccess.Read);
-                    streamContent = new StreamContent(fs);
-
-                    streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
-                    {
-                        Name = "files[" + Path.GetFileName(fileAttachment.FilePath) + "]",
-                        FileName = Path.GetFileName(fileAttachment.FilePath)
-                    };
-                }
-                else if (attachment is StreamAttachment)
-                {
-                    var streamAttachment = (StreamAttachment)attachment;
-
-                    streamContent = new StreamContent(streamAttachment.Stream);
-
-                    streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
-                    {
-                        Name = streamAttachment.Name,
-                        FileName = streamAttachment.Name
-                    };
-                }
-                else
-                    throw new NotImplementedException("Unknown attachment type");
+                    Name = "files[" + attachment.Name + "]",
+                    FileName = attachment.Name
+                };
                 
                 streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse(attachment.ContentType);
+
                 content.Add(streamContent);
+
+                if (!string.IsNullOrEmpty(attachment.ContentId))
+                {
+                    // Add ContentId if assigned
+                    content.Add(new StringContent(attachment.ContentId), "content[" + attachment.Name + "]");
+                }
             }
         }
 
