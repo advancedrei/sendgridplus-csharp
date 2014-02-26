@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace SendGrid.Transport
 {
@@ -57,13 +58,33 @@ namespace SendGrid.Transport
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        [Obsolete("This method is no longer used. Please use DeliverAsync() instead.", true)]
+        public void Deliver(IMail message)
+        {
+        }
+
+        /// <summary>
         /// Deliver an email using SMTP protocol
         /// </summary>
         /// <param name="message"></param>
-        public void Deliver(IMail message)
+        public Task DeliverAsync(IMail message)
         {
-            var mime = message.CreateMimeMessage();
-            _client.Send(mime);
+            var tcs = new TaskCompletionSource<object>();
+            try
+            {
+                var mime = message.CreateMimeMessage();
+                _client.Send(mime);
+                tcs.TrySetResult(null);
+            }
+            catch (Exception ex)
+            {
+                tcs.TrySetException(ex);
+            }
+
+            return tcs.Task;
         }
 
         /// <summary>
@@ -106,16 +127,14 @@ namespace SendGrid.Transport
         internal class SmtpWrapper : ISmtpClient
         {
             private readonly SmtpClient _client;
+
+            /// <summary>
+            /// 
+            /// </summary>
             public bool EnableSsl
             {
-                get
-                {
-                    return _client.EnableSsl;
-                }
-                set
-                {
-                    _client.EnableSsl = value;
-                }
+                get { return _client.EnableSsl; }
+                set { _client.EnableSsl = value; }
             }
 
             public SmtpWrapper(string host, Int32 port, NetworkCredential credentials, SmtpDeliveryMethod deliveryMethod)

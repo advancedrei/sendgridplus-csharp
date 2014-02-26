@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.NET45.Tests", "Mail.NET45.Tests\Mail.NET45.Tests.csproj", "{0319E73A-7039-4858-B047-1EDF88BB6BD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example.Console", "Example.Console\Example.Console.csproj", "{F39ADCE7-63B5-406D-9BE8-C407920B6B8F}"
@@ -8,13 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.NET45", "Mail.NET45\Mail.NET45.csproj", "{3C687BEF-FF50-44AD-8315-2D4237281AF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.NET40", "Mail.NET40\Mail.NET40.csproj", "{2808BF02-6229-4BC1-8553-A1F111EEB839}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F4BB8EEC-1D9A-4E23-84C4-24961C8CBE9C}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.Portable", "Mail.Portable\Mail.Portable.csproj", "{9948E954-797F-4C71-A981-AF4A31B061DC}"
 EndProject

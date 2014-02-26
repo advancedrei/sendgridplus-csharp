@@ -92,6 +92,8 @@ namespace SendGrid
             var keys = new List<string> {"category"};
             _settings.AddSetting(keys, category);
         }
+
+        ///<summary>
         /// This sets the categories for this email.  Statistics are stored on a per category
         /// basis, so this can be useful for tracking on a per group basis.
         /// </summary>

@@ -23,7 +23,7 @@ namespace SendGrid.Tests.Transport
             var client = mockClient.Object;
             var credentials = new NetworkCredential("username", "password");
             var test = SMTP.GetInstance(client, credentials);
-            test.Deliver(message);
+            test.DeliverAsync(message);
 
             mockClient.Verify(foo => foo.Send(mime), Times.Once());
             mockMessage.Verify(foo => foo.CreateMimeMessage(), Times.Once());

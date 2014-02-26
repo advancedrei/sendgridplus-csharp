@@ -177,7 +177,6 @@ namespace SendGrid
         /// <param name="subject">The subject of the message</param>
         /// <param name="html">the html content for the message</param>
         /// <param name="text">the plain text part of the message</param>
-        /// <param name="transport">Transport class to use for sending the message</param>
         /// <returns></returns>
         public static Mail GetInstance(MailAddress from, MailAddress[] to, MailAddress[] cc, MailAddress[] bcc,
                                                 string subject, string html, string text)
@@ -376,6 +375,10 @@ namespace SendGrid
             Header.SetCategory(category);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="categories"></param>
         public void SetCategories(IEnumerable<string> categories)
         {
             Header.SetCategories(categories);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Net.Http;
 using PCLStorage;
@@ -15,7 +16,7 @@ namespace SendGrid.Transport
         #region Properties
 		//TODO: Make this configurable
         public const string BaseUrl = "sendgrid.com/api/";
-        public const string Endpoint = "/api/mail.send";
+        public const string Endpoint = "mail.send";
         public const string JsonFormat = "json";
         public const string XmlFormat = "xml";
 
@@ -46,10 +47,19 @@ namespace SendGrid.Transport
         }
 
         /// <summary>
-        /// Delivers a message over SendGrid's Web interface
+        /// 
         /// </summary>
         /// <param name="message"></param>
-        public async void Deliver(IMail message)
+        [Obsolete("This method is no longer used. Please use DeliverAsync() instead.", true)]
+        public void Deliver(IMail message)
+        {
+        }
+
+        /// <summary>
+        /// Asynchronously delivers a message over SendGrid's Web interface.
+        /// </summary>
+        /// <param name="message"></param>
+        public async Task DeliverAsync(IMail message)
         {
             var client = new HttpClient
             {

@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Net.Http;
 
 namespace SendGrid.Transport
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
     public class Web : ITransport
     {
         #region Properties
         //TODO: Make this configurable
         public const string BaseUrl = "sendgrid.com/api/";
-        public const string Endpoint = "/api/mail.send";
+        public const string Endpoint = "mail.send";
         public const string JsonFormat = "json";
         public const string XmlFormat = "xml";
 
@@ -45,10 +49,19 @@ namespace SendGrid.Transport
         }
 
         /// <summary>
-        /// Delivers a message over SendGrid's Web interface
+        /// 
         /// </summary>
         /// <param name="message"></param>
+        [Obsolete("This method is no longer used. Please use DeliverAsync() instead.", true)]
         public void Deliver(IMail message)
+        {
+        }
+
+        /// <summary>
+        /// Asynchronously delivers a message over SendGrid's Web interface.
+        /// </summary>
+        /// <param name="message"></param>
+        public async Task DeliverAsync(IMail message)
         {
             var client = new HttpClient
             {
@@ -56,14 +69,24 @@ namespace SendGrid.Transport
             };
 
             var content = new MultipartFormDataContent();
-            AttachFormParams(message, content);
-            AttachAttachments(message, content);
+            AddFormParams(message, content);
+            AddAttachments(message, content);
+#if NET40
             var response = client.PostAsync(Endpoint + ".xml", content).Result;
+#elif NET45
+            var response = await client.PostAsync(Endpoint + ".xml", content);
+#endif
             CheckForErrors(response);
         }
 
         #region Support Methods
-        private void AttachFormParams(IMail message, MultipartFormDataContent content)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="content"></param>
+        private void AddFormParams(IMail message, MultipartFormDataContent content)
         {
             var formParams = FetchFormParams(message);
             //formParams.ForEach(kvp => multipartEntity.AddBody(new StringBody(Encoding.UTF8, kvp.Key, kvp.Value)));
@@ -73,7 +96,12 @@ namespace SendGrid.Transport
             }
         }
 
-        private void AttachAttachments(IMail message, MultipartFormDataContent content)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="content"></param>
+        private void AddAttachments(IMail message, MultipartFormDataContent content)
         {
             foreach (var attachment in message.Attachments)
             {
@@ -97,6 +125,10 @@ namespace SendGrid.Transport
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
         private void CheckForErrors(HttpResponseMessage response)
         {
             //transport error
@@ -112,27 +144,32 @@ namespace SendGrid.Transport
             {
                 while (reader.Read())
                 {
-                    if (reader.IsStartElement())
+                    if (!reader.IsStartElement()) continue;
+                    switch (reader.Name)
                     {
-                        switch (reader.Name)
-                        {
-                            case "result":
-                                break;
-                            case "message": // success
-                                bool errors = reader.ReadToNextSibling("errors");
-                                if (errors)
-                                    throw new ProtocolViolationException();
-                                return;
-                            case "error": // failure
+                        case "result":
+                            break;
+                        case "message": // success
+                            bool errors = reader.ReadToNextSibling("errors");
+                            if (errors)
+                            {
                                 throw new ProtocolViolationException();
-                            default:
-                                throw new ArgumentException("Unknown element: " + reader.Name);
-                        }
+                            }
+                            return;
+                        case "error": // failure
+                            throw new ProtocolViolationException();
+                        default:
+                            throw new ArgumentException("Unknown element: " + reader.Name);
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         internal List<KeyValuePair<string, string>> FetchFormParams(IMail message)
         {
             var result = new List<KeyValuePair<string, string>>

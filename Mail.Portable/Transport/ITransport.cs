@@ -1,4 +1,6 @@
-﻿namespace SendGrid.Transport
+﻿using System.Threading.Tasks;
+
+namespace SendGrid.Transport
 {
     /// <summary>
     /// Encapsulates the transport mechanism so that it can be used in a generic way, 
@@ -10,6 +12,6 @@
         /// Delivers a message using the protocol of the derived class
         /// </summary>
         /// <param name="message">the message to be delivered</param>
-        void Deliver(IMail message);
+        Task DeliverAsync(IMail message);
     }
 }

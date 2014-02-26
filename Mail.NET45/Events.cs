@@ -58,7 +58,7 @@ namespace SendGrid
                   "Consider logging into your account and upgrading the Webhook app to V3 and using the GetEvents() methods instead.", false)]
         public static EventData GetEvent(string json)
         {
-            return JsonConvert.DeserializeObject<EventData>(string.Format("[{0}]", json));
+            return JsonConvert.DeserializeObject<EventData>(string.Format("[{0}]", json.Trim()));
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace SendGrid
                   "Consider logging into your account and upgrading the Webhook app to V3 and using the GetEvents() methods instead.", false)]
         public static T GetEvent<T>(string json) where T : EventData
         {
-            return JsonConvert.DeserializeObject<T>(string.Format("[{0}]", json));
+            return JsonConvert.DeserializeObject<T>(string.Format("[{0}]", json.Trim()));
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace SendGrid
                 json += "]";
             }
 
-            return JsonConvert.DeserializeObject<List<EventData>>(json);
+            return JsonConvert.DeserializeObject<List<EventData>>(json.Trim());
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace SendGrid
                 json += "]";
             }
 
-            return JsonConvert.DeserializeObject<List<T>>(json);
+            return JsonConvert.DeserializeObject<List<T>>(json.Trim());
         }
 
     }
