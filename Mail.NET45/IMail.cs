@@ -17,7 +17,7 @@ namespace SendGrid
 		/// <summary>
 		/// Gets the attachment collection used to store data attached to this e-mail message. 
 		/// </summary>
-        string[] Attachments { get; set; }
+        AttachmentBase[] Attachments { get; set; }
 
 		/// <summary>
 		/// Gets the address collection that contains the blind carbon copy (BCC) recipients for this e-mail message. 
@@ -58,8 +58,6 @@ namespace SendGrid
 		/// Gets or sets the list of addresses to reply to for the mail message. 
 		/// </summary>
         MailAddress[] ReplyTo { get; set; }
-
-        Dictionary<string, MemoryStream> StreamedAttachments { get; set; }
 
 		/// <summary>
 		/// Gets or sets the subject line for this e-mail message. 

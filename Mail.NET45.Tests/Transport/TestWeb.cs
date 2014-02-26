@@ -11,6 +11,8 @@ namespace SendGrid.Tests.Transport
     [TestClass]
     class TestWeb
     {
+/*
+Not applicable with the new way to do attachments
         [TestMethod]
         public void TestFetchFileBodies()
         {
@@ -30,6 +32,7 @@ namespace SendGrid.Tests.Transport
             Assert.AreEqual(result[1].Value.Name, "bar");
             Assert.AreEqual(result[2].Value.Name, "raz");
         }
+*/
 
         [TestMethod]
         public void TestFetchFormParams()

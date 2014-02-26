@@ -57,7 +57,7 @@ namespace SendGrid.Transport
 
             var content = new MultipartFormDataContent();
             AttachFormParams(message, content);
-            AttachFiles(message, content);
+            AttachAttachments(message, content);
             var response = client.PostAsync(Endpoint + ".xml", content).Result;
             CheckForErrors(response);
         }
@@ -73,39 +73,27 @@ namespace SendGrid.Transport
             }
         }
 
-        private void AttachFiles(IMail message, MultipartFormDataContent content)
+        private void AttachAttachments(IMail message, MultipartFormDataContent content)
         {
-            var files = FetchFileBodies(message);
-            foreach (var file in files)
+            foreach (var attachment in message.Attachments)
             {
-                var fs = new FileStream(file.Key, FileMode.Open, FileAccess.Read);
-                var fileContent = new StreamContent(fs);
+                var streamContent = new StreamContent(attachment.GetStream());
 
-                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                streamContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                 {
-                    Name = "files[" + Path.GetFileName(file.Key) + "]",
-                    FileName = Path.GetFileName(file.Key)
+                    Name = "files[" + attachment.Name + "]",
+                    FileName = attachment.Name
                 };
+                
+                streamContent.Headers.ContentType = MediaTypeHeaderValue.Parse(attachment.ContentType);
 
-                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
-                content.Add(fileContent);
-            }
+                content.Add(streamContent);
 
-            var streamingFiles = FetchStreamingFileBodies(message);
-            foreach (KeyValuePair<string, MemoryStream> file in streamingFiles)
-            {
-                var name = file.Key;
-                var stream = file.Value;
-                var fileContent = new StreamContent(stream);
-
-                fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                if (!string.IsNullOrEmpty(attachment.ContentId))
                 {
-                    Name = "files[" + Path.GetFileName(file.Key) + "]",
-                    FileName = Path.GetFileName(file.Key)
-                };
-
-                fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
-                content.Add(fileContent);
+                    // Add ContentId if assigned
+                    content.Add(new StringContent(attachment.ContentId), "content[" + attachment.Name + "]");
+                }
             }
         }
 
@@ -177,18 +165,6 @@ namespace SendGrid.Transport
                     .ToList();
             }
             return result.Where(r => !string.IsNullOrEmpty(r.Value)).ToList();
-        }
-
-        internal List<KeyValuePair<string, MemoryStream>> FetchStreamingFileBodies(IMail message)
-        {
-            return message.StreamedAttachments.Select(kvp => kvp).ToList();
-        }
-
-        internal List<KeyValuePair<string, FileInfo>> FetchFileBodies(IMail message)
-        {
-            if (message.Attachments == null)
-                return new List<KeyValuePair<string, FileInfo>>();
-            return message.Attachments.Select(name => new KeyValuePair<string, FileInfo>(name, new FileInfo(name))).ToList();
         }
 
         #endregion
