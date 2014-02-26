@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>SendGridPlus</id>
+        <version>4.0.0-Beta2</version>
+        <title>SendGridPlus</title>
+        <authors>CJ Buchmann,Tyler Bischel,Eric Becking,Robert McLaws</authors>
+        <owners>AdvancedREI</owners>
+        <projectUrl>https://github.com/advancedrei/sendgrid-csharp</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A client library for interfacing with the SendGrid APIs, including the Event API. This is an updated and refactored version of the SendGrid package.</description>
+        <summary>A client library for interfacing with the SendGrid APIs, including the Event API.</summary>
+        <releaseNotes>4.0
+  • BREAKING: The "Deliver" method has been changed to "DeliverAsync" and is now async-only. This is an intentional change so that you have to update your code, since these are high-latency calls.
+  • Fixes an issue with Events not processing properly due to malformed requests coming from SendGrid.
+  • Fixes an issue where the Web transport was using the wrong URL.
+
+3.1
+  • Now includes a Portable Class Library for use in Silverlight 5 and Windows Phone 8. Use the Web transport for delivery.
+
+3.0
+
+  • BREAKING: Changed some EventData properties to be clearer on what they are for.
+  • Added new EventData properties for SendGrid's updated payloads.
+  • Added support for handling most of SendGrid's issues with sending malformed v1 &amp; v2 Event payloads.
+  • Replaced RestSharp with HttpClient.
+
+2.1.1
+
+  • Changed the EventData.Status property to a string to fix event data errors.
+  • Fixed TransportEncoding support.
+  • Better EventStream handling.
+
+2.0.3:
+  • Update to ensure the stream passed into the Events API is always readable.
+</releaseNotes>
+        <copyright>Copyright © 2012-2014 SendGrid and AdvancedREI, LLC.</copyright>
+        <tags>SendGrid Email Mail Microsoft Azure</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.5">
+                <dependency id="Newtonsoft.Json" version="6.0.1" />
+                <dependency id="Microsoft.Net.Http" version="2.2.18" />
+            </group>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="Newtonsoft.Json" version="6.0.1" />
+                <dependency id="Microsoft.Net.Http" version="2.2.18" />
+            </group>
+            <group targetFramework=".NETPortable0.0-sl5+wp8">
+                <dependency id="PCLStorage" version="0.2.1-pre" />
+                <dependency id="Microsoft.Net.Http" version="2.2.18" />
+                <dependency id="Newtonsoft.Json" version="6.0.1" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Mail.NET40\bin\Release\SendGridPlus.dll" target="lib\net40\SendGridPlus.dll" />
+        <file src="Mail.NET40\bin\Release\SendGridPlus.pdb" target="lib\net40\SendGridPlus.pdb" />
+        <file src="Mail.NET40\bin\Release\SendGridPlus.xml" target="lib\net40\SendGridPlus.xml" />
+        <file src="Mail.NET45\bin\Release\SendGridPlus.dll" target="lib\net45\SendGridPlus.dll" />
+        <file src="Mail.NET45\bin\Release\SendGridPlus.pdb" target="lib\net45\SendGridPlus.pdb" />
+        <file src="Mail.NET45\bin\Release\SendGridPlus.xml" target="lib\net45\SendGridPlus.xml" />
+        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.dll" target="lib\portable-sl5+wp8\SendGridPlus.Portable.dll" />
+        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.pdb" target="lib\portable-sl5+wp8\SendGridPlus.Portable.pdb" />
+        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.xml" target="lib\portable-sl5+wp8\SendGridPlus.Portable.xml" />
+        <file src="Mail.Net45\**\*.cs" exclude="**\obj\**\*.*" target="src" />
+    </files>
+</package>
