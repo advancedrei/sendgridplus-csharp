@@ -176,7 +176,7 @@
     </Reference>
     <Reference Include="SendGridPlus.Portable, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SendGridPlus.3.1-alpha\lib\portable-sl5+wp8\SendGridPlus.Portable.dll</HintPath>
+      <HintPath>..\packages\SendGridPlus.4.0.0-Beta3\lib\portable-sl5+wp8+monotouch+monoandroid\SendGridPlus.Portable.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

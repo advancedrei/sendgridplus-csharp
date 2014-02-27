@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using Example.WP8.Annotations;
 using SendGrid;
@@ -96,7 +97,7 @@ namespace Example.WP8.ViewModels
 
         #region Methods
 
-        public bool SendMail()
+        public async Task<bool> SendMail()
         {
             try
             {
@@ -107,7 +108,7 @@ namespace Example.WP8.ViewModels
                 mail.Text = Body;
                 var credentials = new NetworkCredential(UserName, Password);
                 var sendGrid = Web.GetInstance(credentials);
-                sendGrid.Deliver(mail);
+                await sendGrid.DeliverAsync(mail);
                 return true;
             }
             catch (Exception ex)

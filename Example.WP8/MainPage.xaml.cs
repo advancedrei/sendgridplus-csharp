@@ -15,9 +15,9 @@ namespace Example.WP8
             //BuildLocalizedApplicationBar();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var result = App.MainViewModel.SendMail();
+            var result = await App.MainViewModel.SendMail();
             var text = result ? "Message has been sent!" : "Message could not be sent.";
             var header = result ? "Message Delivered" : "Message Failed";
             MessageBox.Show(text, header, MessageBoxButton.OK);
