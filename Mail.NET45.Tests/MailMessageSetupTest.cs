@@ -3,6 +3,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SendGrid.SmtpApi;
 
 namespace SendGrid.Tests
 {
@@ -16,7 +17,7 @@ namespace SendGrid.Tests
 		    var sg = new Mail(mock.Object);
 
 			var strings = new string[2] {"eric@sendgrid.com", "tyler@sendgrid.com"};
-			sg.Header.AddTo(strings);
+			sg.Header.SetTo(strings);
 			Assert.AreEqual(strings, sg.Header.To, "check the X-Smtpapi to array");
         }
 
@@ -109,15 +110,15 @@ namespace SendGrid.Tests
         }
 
         [TestMethod]
-        public void TestAddSubVal()
+        public void TestAddSubstitution()
         {
             var substitutionStrings = new List<String> {"foo", "bar", "beer"};
             var mock = new Mock<IHeader>();
 
             var sg = new Mail(mock.Object);
-            sg.AddSubVal("-name-", substitutionStrings);
+            sg.AddSubstitution("-name-", substitutionStrings);
 
-            mock.Verify(foo => foo.AddSubVal("-name-", substitutionStrings));
+            mock.Verify(foo => foo.AddSubstitution("-name-", substitutionStrings));
         }
 
         [TestMethod]
@@ -130,7 +131,7 @@ namespace SendGrid.Tests
             var sg = new Mail(mock.Object);
             sg.AddUniqueIdentifiers(kvp);
 
-            mock.Verify(foo => foo.AddUniqueIdentifier(kvp));
+            mock.Verify(foo => foo.AddUniqueArgs(kvp));
         }
 
         [TestMethod]

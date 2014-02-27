@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Mail;
 using System.Net.Mime;
+using SendGrid.SmtpApi;
 
 namespace SendGrid
 {
@@ -156,7 +157,7 @@ namespace SendGrid
         /// </summary>
         /// <param name="replacementTag">the string in the email that you'll replace eg. '-name-'</param>
         /// <param name="substitutionValues">a list of values that will be substituted in for the replacementTag, one for each recipient</param>
-        void AddSubVal(string replacementTag, List<string> substitutionValues);
+		void AddSubstitution(string replacementTag, List<string> substitutionValues);
 
         /// <summary>
         /// This adds parameters and values that will be passed back through SendGrid's
@@ -172,7 +173,14 @@ namespace SendGrid
         /// <param name="category">categories applied to the message</param>
         void SetCategory(string category);
 
-        /// <summary>
+		/// <summary>
+		///     This sets the categories for this email.  Statistics are stored on a per category
+		///     basis, so this can be useful for tracking on a per group basis.
+		/// </summary>
+		/// <param name="categories">categories applied to the message</param>
+		void SetCategories(IEnumerable<string> categories);
+
+		/// <summary>
         /// Add an attachment to the message.
         /// </summary>
         /// <param name="filePath">a fully qualified file path as a string</param>

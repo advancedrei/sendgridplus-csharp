@@ -19,9 +19,10 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NET40</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\SendGridPlus.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApiPlus.1.0.0\lib\portable-net4+sl5+wp8+win8+monotouch+monoandroid\SendGrid.SmtpApi.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -81,12 +85,6 @@
     </Compile>
     <Compile Include="..\Mail.NET45\Events.cs">
       <Link>Events.cs</Link>
-    </Compile>
-    <Compile Include="..\Mail.NET45\Header.cs">
-      <Link>Header.cs</Link>
-    </Compile>
-    <Compile Include="..\Mail.NET45\IHeader.cs">
-      <Link>IHeader.cs</Link>
     </Compile>
     <Compile Include="..\Mail.NET45\IMail.cs">
       <Link>IMail.cs</Link>

@@ -2,6 +2,7 @@
 using System.IO;
 using SendGrid.Net.Mail;
 using SendGrid.Net.Mime;
+using SendGrid.SmtpApi;
 
 namespace SendGrid
 {
@@ -59,6 +60,9 @@ namespace SendGrid
 		/// </summary>
         MailAddress[] ReplyTo { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         Dictionary<string, MemoryStream> StreamedAttachments { get; set; }
 
 		/// <summary>
@@ -158,7 +162,7 @@ namespace SendGrid
         /// </summary>
         /// <param name="replacementTag">the string in the email that you'll replace eg. '-name-'</param>
         /// <param name="substitutionValues">a list of values that will be substituted in for the replacementTag, one for each recipient</param>
-        void AddSubVal(string replacementTag, List<string> substitutionValues);
+        void AddSubstitution(string replacementTag, List<string> substitutionValues);
 
         /// <summary>
         /// This adds parameters and values that will be passed back through SendGrid's

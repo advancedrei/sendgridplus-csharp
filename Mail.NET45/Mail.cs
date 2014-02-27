@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
-using SendGrid.Transport;
+using System.Text.RegularExpressions;
+using SendGrid.SmtpApi;
 
 namespace SendGrid
 {
@@ -349,11 +349,11 @@ namespace SendGrid
         /// </summary>
         /// <param name="replacementTag">the string in the email that you'll replace eg. '-name-'</param>
         /// <param name="substitutionValues">a list of values that will be substituted in for the replacementTag, one for each recipient</param>
-        public void AddSubVal(string replacementTag, List<string> substitutionValues)
-        {
-            //let the system complain if they do something bad, since the function returns null
-            Header.AddSubVal(replacementTag, substitutionValues);
-        }
+		public void AddSubstitution(string replacementTag, List<string> substitutionValues)
+		{
+			//let the system complain if they do something bad, since the function returns null
+			Header.AddSubstitution(replacementTag, substitutionValues);
+		}
 
         /// <summary>
         /// This adds parameters and values that will be passed back through SendGrid's
@@ -362,7 +362,7 @@ namespace SendGrid
         /// <param name="identifiers">parameter substitutionValues pairs to be passed back on event notification</param>
         public void AddUniqueIdentifiers(IDictionary<string, string> identifiers)
         {
-            Header.AddUniqueIdentifier(identifiers);
+            Header.AddUniqueArgs(identifiers);
         }
 
         /// <summary>
@@ -450,9 +450,9 @@ namespace SendGrid
         /// <returns></returns>
         public IEnumerable<string> GetRecipients()
         {
-            List<MailAddress> tos = _message.To.ToList();
-            List<MailAddress> ccs = _message.CC.ToList();
-            List<MailAddress> bccs = _message.Bcc.ToList();
+			var tos = _message.To.ToList();
+			var ccs = _message.CC.ToList();
+			var bccs = _message.Bcc.ToList();
 
             var rcpts = tos.Union(ccs.Union(bccs)).Select(address => address.Address);
             return rcpts;
@@ -472,7 +472,7 @@ namespace SendGrid
         /// </summary>
         public void DisableGravatar()
         {
-            Header.Disable(Filters["Gravatar"]);
+			Header.DisableFilter(Filters["Gravatar"]);
         }
 
         /// <summary>
@@ -480,7 +480,7 @@ namespace SendGrid
         /// </summary>
         public void DisableOpenTracking()
         {
-            Header.Disable(Filters["OpenTracking"]);
+			Header.DisableFilter(Filters["OpenTracking"]);
         }
 
         /// <summary>
@@ -488,7 +488,7 @@ namespace SendGrid
         /// </summary>
         public void DisableClickTracking()
         {
-            Header.Disable(Filters["ClickTracking"]);
+			Header.DisableFilter(Filters["ClickTracking"]);
         }
 
         /// <summary>
@@ -496,7 +496,7 @@ namespace SendGrid
         /// </summary>
         public void DisableSpamCheck()
         {
-            Header.Disable(Filters["SpamCheck"]);
+			Header.DisableFilter(Filters["SpamCheck"]);
         }
 
         /// <summary>
@@ -504,7 +504,7 @@ namespace SendGrid
         /// </summary>
         public void DisableUnsubscribe()
         {
-            Header.Disable(Filters["Unsubscribe"]);
+			Header.DisableFilter(Filters["Unsubscribe"]);
         }
 
         /// <summary>
@@ -512,7 +512,7 @@ namespace SendGrid
         /// </summary>
         public void DisableFooter()
         {
-            Header.Disable(Filters["Footer"]);
+			Header.DisableFilter(Filters["Footer"]);
         }
 
         /// <summary>
@@ -520,7 +520,7 @@ namespace SendGrid
         /// </summary>
         public void DisableGoogleAnalytics()
         {
-            Header.Disable(Filters["GoogleAnalytics"]);
+			Header.DisableFilter(Filters["GoogleAnalytics"]);
         }
 
         /// <summary>
@@ -528,7 +528,7 @@ namespace SendGrid
         /// </summary>
         public void DisableTemplate()
         {
-            Header.Disable(Filters["Template"]);
+			Header.DisableFilter(Filters["Template"]);
         }
 
         /// <summary>
@@ -536,7 +536,7 @@ namespace SendGrid
         /// </summary>
         public void DisableBcc()
         {
-            Header.Disable(Filters["Bcc"]);
+			Header.DisableFilter(Filters["Bcc"]);
         }
 
         /// <summary>
@@ -544,7 +544,7 @@ namespace SendGrid
         /// </summary>
         public void DisableBypassListManagement()
         {
-            Header.Disable(Filters["BypassListManagement"]);
+			Header.DisableFilter(Filters["BypassListManagement"]);
         }
 
         /// <summary>
@@ -552,7 +552,7 @@ namespace SendGrid
         /// </summary>
         public void EnableGravatar()
         {
-            Header.Enable(Filters["Gravatar"]);
+			Header.EnableFilter(Filters["Gravatar"]);
         }
 
         /// <summary>
@@ -560,7 +560,7 @@ namespace SendGrid
         /// </summary>
         public void EnableOpenTracking()
         {
-            Header.Enable(Filters["OpenTracking"]);
+			Header.EnableFilter(Filters["OpenTracking"]);
         }
 
         /// <summary>
@@ -571,7 +571,7 @@ namespace SendGrid
         {
             var filter = Filters["ClickTracking"];
                 
-            Header.Enable(filter);
+			Header.EnableFilter(filter);
             if (includePlainText)
             {
                 Header.AddFilterSetting(filter, new List<string> { "enable_text" }, "1");
@@ -587,7 +587,7 @@ namespace SendGrid
         {
             var filter = Filters["SpamCheck"];
 
-            Header.Enable(filter);
+			Header.EnableFilter(filter);
             Header.AddFilterSetting(filter, new List<string> { "maxscore" }, score.ToString(CultureInfo.InvariantCulture));
             Header.AddFilterSetting(filter, new List<string> { "url" }, url);
         }
@@ -601,20 +601,20 @@ namespace SendGrid
         {
             var filter = Filters["Unsubscribe"];
 
-            if(!System.Text.RegularExpressions.Regex.IsMatch(text, ReText))
-            {
-                throw new Exception("Missing substitution replacementTag in text");
-            }
+			if (!Regex.IsMatch(text, ReText))
+			{
+				throw new Exception("Missing substitution replacementTag in text");
+			}
 
-            if(!System.Text.RegularExpressions.Regex.IsMatch(html, ReHtml))
-            {
-                throw new Exception("Missing substitution replacementTag in html");
-            }
+			if (!Regex.IsMatch(html, ReHtml))
+			{
+				throw new Exception("Missing substitution replacementTag in html");
+			}
 
-            Header.Enable(filter);
-            Header.AddFilterSetting(filter, new List<string> { "text/plain" }, text);
-            Header.AddFilterSetting(filter, new List<string> {"text/html"}, html);
-        }
+			Header.EnableFilter(filter);
+			Header.AddFilterSetting(filter, new List<string> {"text/plain"}, text);
+			Header.AddFilterSetting(filter, new List<string> {"text/html"}, html);
+		}
 
         /// <summary>
         /// Allows SendGrid to manage unsubscribes and ensure these users don't get future emails from the sender
@@ -624,7 +624,7 @@ namespace SendGrid
         {
             var filter = Filters["Unsubscribe"];
 
-            Header.Enable(filter);
+			Header.EnableFilter(filter);
             Header.AddFilterSetting(filter, new List<string> { "replace" }, replace);
         }
 
@@ -637,7 +637,7 @@ namespace SendGrid
         {
             var filter = Filters["Footer"];
 
-            Header.Enable(filter);
+			Header.EnableFilter(filter);
             Header.AddFilterSetting(filter, new List<string> { "text/plain" }, text);
             Header.AddFilterSetting(filter, new List<string> { "text/html" }, html);
         }
@@ -654,7 +654,7 @@ namespace SendGrid
         {
             var filter = Filters["GoogleAnalytics"];
 
-            Header.Enable(filter);
+			Header.EnableFilter(filter);
             Header.AddFilterSetting(filter, new List<string> { "utm_source" }, source);
             Header.AddFilterSetting(filter, new List<string> { "utm_medium" }, medium);
             Header.AddFilterSetting(filter, new List<string> { "utm_term" }, term);
@@ -670,12 +670,12 @@ namespace SendGrid
         {
             var filter = Filters["Template"];
 
-            if (!System.Text.RegularExpressions.Regex.IsMatch(html, ReHtml))
+			if (!Regex.IsMatch(html, ReHtml))
             {
                 throw new Exception("Missing substitution replacementTag in html");
             }
 
-            Header.Enable(filter);
+			Header.EnableFilter(filter);
             Header.AddFilterSetting(filter, new List<string> { "text/html" }, html);
         }
 
@@ -688,7 +688,7 @@ namespace SendGrid
         {
             var filter = Filters["Bcc"];
 
-            Header.Enable(filter);
+			Header.EnableFilter(filter);
             Header.AddFilterSetting(filter, new List<string> { "email" }, email);
         }
 
@@ -698,7 +698,7 @@ namespace SendGrid
         /// </summary>
         public void EnableBypassListManagement()
         {
-            Header.Enable(Filters["BypassListManagement"]);
+			Header.EnableFilter(Filters["BypassListManagement"]);
         }
 
         /// <summary>
@@ -707,7 +707,7 @@ namespace SendGrid
         /// <returns>MIME to be sent.</returns>
         public MailMessage CreateMimeMessage()
         {
-            string smtpapi = Header.AsJson();
+			var smtpapi = Header.JsonString();
 
             if (!string.IsNullOrEmpty(smtpapi))
                 _message.Headers.Add("X-Smtpapi", smtpapi);

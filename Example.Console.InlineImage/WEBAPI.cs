@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Transport;
 
@@ -309,7 +310,7 @@ namespace Example
         /// The Footer App will insert a custom footer at the bottom of the text and HTML bodies.
         /// http://docs.sendgrid.com/documentation/apps/google-analytics/
         /// </summary>
-        public void EnableGoogleAnalytics()
+        public async Task EnableGoogleAnalytics()
         {
             //create a new message object
             var message = Mail.GetInstance();
@@ -341,7 +342,7 @@ namespace Example
             message.EnableGoogleAnalytics("SendGridTest", "EMAIL", "Sendgrid", "ad-one", "My SG Campaign");
 
             //send the mail
-            transportInstance.DeliverAsync(message);
+            await transportInstance.DeliverAsync(message);
         }
 
         /// <summary>
@@ -427,7 +428,7 @@ namespace Example
         /// This feature allows you to create a message template, and specify different replacement
         /// strings for each specific recipient
         /// </summary>
-        public void AddSubstitutionValues()
+        public async Task AddSubstitutionValues()
         {
             //create a new message object
             var message = Mail.GetInstance();
@@ -453,7 +454,7 @@ namespace Example
             //There should be one value for each recipient in the To list
             var substitutionValues = new List<string> { "Mr Foo", "Mrs Raz" };
 
-            message.AddSubVal(replacementKey, substitutionValues);
+            message.AddSubstitution(replacementKey, substitutionValues);
 
             //create an instance of the SMTP transport mechanism
             var transportInstance = Web.GetInstance(new NetworkCredential(_username, _password));
@@ -462,7 +463,7 @@ namespace Example
             message.EnableBypassListManagement();
 
             //send the mail
-            transportInstance.DeliverAsync(message);
+            await transportInstance.DeliverAsync(message);
         }
 
         /// <summary>

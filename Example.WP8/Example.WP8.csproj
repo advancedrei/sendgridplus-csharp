@@ -171,6 +171,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\PCLStorage.0.9.3\lib\wp8\PCLStorage.Abstractions.dll</HintPath>
     </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApiPlus.1.0.0\lib\portable-net4+sl5+wp8+win8+monotouch+monoandroid\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
     <Reference Include="SendGridPlus.Portable, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SendGridPlus.3.1-alpha\lib\portable-sl5+wp8\SendGridPlus.Portable.dll</HintPath>

@@ -59,6 +59,9 @@
     <Reference Include="pUnit">
       <HintPath>..\packages\pUnit.1.0.2\lib\net20\pUnit.dll</HintPath>
     </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApiPlus.1.0.0\lib\portable-net4+sl5+wp8+win8+monotouch+monoandroid\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
@@ -80,12 +83,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventsTest.cs" />
-    <Compile Include="HeaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JsonUtilsTest.cs" />
     <Compile Include="MailTest.cs" />
     <Compile Include="MailMessageSetupTest.cs" />
-    <Compile Include="TreeNodeTest.cs" />
     <Compile Include="UtilsTest.cs" />
     <Compile Include="Transport\TestWeb.cs" />
   </ItemGroup>

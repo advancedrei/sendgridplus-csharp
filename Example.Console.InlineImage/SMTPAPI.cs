@@ -451,7 +451,7 @@ namespace Example
             //There should be one value for each recipient in the To list
             var substitutionValues = new List<string> {"Mr Foo", "Mrs Raz"};
 
-            message.AddSubVal(replacementKey, substitutionValues);
+            message.AddSubstitution(replacementKey, substitutionValues);
 
             //create an instance of the SMTP transport mechanism
             var transportInstance = SMTP.GetInstance(new NetworkCredential(_username, _password));

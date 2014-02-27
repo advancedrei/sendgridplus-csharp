@@ -167,7 +167,7 @@ namespace SendGrid.Transport
                 new KeyValuePair<string, string>("subject", message.Subject),
                 new KeyValuePair<string, string>("text", message.Text),
                 new KeyValuePair<string, string>("html", message.Html),
-                new KeyValuePair<string, string>("x-smtpapi", message.Header.AsJson())
+                new KeyValuePair<string, string>("x-smtpapi", message.Header.JsonString())
             };
             if(message.To != null)
             {

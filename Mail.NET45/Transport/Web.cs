@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -17,8 +18,8 @@ namespace SendGrid.Transport
     {
         #region Properties
         //TODO: Make this configurable
-        public const string BaseUrl = "sendgrid.com/api/";
-        public const string Endpoint = "mail.send";
+        public const string BaseUrl = "api.sendgrid.com";
+        public const string Endpoint = "/api/mail.send";
         public const string JsonFormat = "json";
         public const string XmlFormat = "xml";
 
@@ -137,9 +138,13 @@ namespace SendGrid.Transport
                 throw new Exception(response.ReasonPhrase);
             }
 
-            //TODO: check for HTTP errors... don't throw exceptions just pass info along?
             var content = response.Content.ReadAsStreamAsync().Result;
 
+			FindErrorsInResponse(content);
+		}
+
+		private static void FindErrorsInResponse(Stream content)
+		{
             using (var reader = XmlReader.Create(content))
             {
                 while (reader.Read())
@@ -150,8 +155,7 @@ namespace SendGrid.Transport
                         case "result":
                             break;
                         case "message": // success
-                            bool errors = reader.ReadToNextSibling("errors");
-                            if (errors)
+							if (reader.ReadToNextSibling("errors"))
                             {
                                 throw new ProtocolViolationException();
                             }
@@ -165,6 +169,28 @@ namespace SendGrid.Transport
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response"></param>
+        /// <returns></returns>
+		private static async Task CheckForErrorsAsync(HttpResponseMessage response)
+		{
+			//transport error
+			if (response.StatusCode != HttpStatusCode.OK)
+			{
+				throw new Exception(response.ReasonPhrase);
+			}
+
+#if NET40
+            var content = response.Content.ReadAsStreamAsync().Result;
+#elif NET45
+            var content = await response.Content.ReadAsStreamAsync();
+#endif
+
+			FindErrorsInResponse(content);
+		}
+		
         /// <summary>
         /// 
         /// </summary>
@@ -183,7 +209,7 @@ namespace SendGrid.Transport
                 new KeyValuePair<string, string>("subject", message.Subject),
                 new KeyValuePair<string, string>("text", message.Text),
                 new KeyValuePair<string, string>("html", message.Html),
-                new KeyValuePair<string, string>("x-smtpapi", message.Header.AsJson())
+				new KeyValuePair<string, string>("x-smtpapi", message.Header.JsonString())
             };
             if (message.To != null)
             {
