@@ -134,7 +134,7 @@ namespace SendGrid
         public string Text { get; set; }
 
 		/// <summary>
-		/// The Transfer encoding to send the text body for the message. Used only by SMTP api.
+		/// The Transfer encoding to send the text body for the message. Used only by SMTP api. Default (Base64)
 		/// </summary>
 		public TransferEncoding TextTransferEncoding { get; set; }
 
@@ -197,8 +197,9 @@ namespace SendGrid
 
             Text = text;
             Html = html;
-			TextTransferEncoding = TransferEncoding.SevenBit;
-			HtmlTransferEncoding = TransferEncoding.SevenBit;
+
+			TextTransferEncoding = TransferEncoding.Base64;
+			HtmlTransferEncoding = TransferEncoding.Base64;
         }
 
         internal Mail(IHeader header)
@@ -206,8 +207,8 @@ namespace SendGrid
             _message = new MailMessage();
             Header = header;
             Headers = new Dictionary<string, string>();
-			TextTransferEncoding = TransferEncoding.SevenBit;
-			HtmlTransferEncoding = TransferEncoding.SevenBit;
+			TextTransferEncoding = TransferEncoding.Base64;
+			HtmlTransferEncoding = TransferEncoding.Base64;
         }
 
         private static Dictionary<string, string> InitializeFilters()
@@ -741,14 +742,14 @@ namespace SendGrid
             if (Text != null)
             {
                 AlternateView plainView = AlternateView.CreateAlternateViewFromString(Text, null, "text/plain");
-				//plainView.TransferEncoding = TextTransferEncoding;
+				plainView.TransferEncoding = TextTransferEncoding;
                 _message.AlternateViews.Add(plainView);
             }
 
             if (Html != null)
             {
                 AlternateView htmlView = AlternateView.CreateAlternateViewFromString(Html, null, "text/html");
-				//htmlView.TransferEncoding = HtmlTransferEncoding;
+				htmlView.TransferEncoding = HtmlTransferEncoding;
                 _message.AlternateViews.Add(htmlView);
             }
             
