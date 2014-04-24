@@ -114,6 +114,8 @@ namespace SendGrid
         /// <returns></returns>
         public static List<EventData> GetEvents(string json)
         {
+			json = json.Trim();
+
             // RWM: Deal with v1 and v2 batched Event data.
             if (!json.StartsWith("["))
             {
@@ -126,7 +128,7 @@ namespace SendGrid
                 json += "]";
             }
 
-            return JsonConvert.DeserializeObject<List<EventData>>(json.Trim());
+            return JsonConvert.DeserializeObject<List<EventData>>(json);
         }
 
         /// <summary>
@@ -137,6 +139,8 @@ namespace SendGrid
         /// <returns></returns>
         public static List<T> GetEvents<T>(string json) where T : EventData
         {
+			json = json.Trim();
+
             // RWM: Deal with v1 and v2 batched Event data.
             if (!json.StartsWith("["))
             {
@@ -149,7 +153,7 @@ namespace SendGrid
                 json += "]";
             }
 
-            return JsonConvert.DeserializeObject<List<T>>(json.Trim());
+            return JsonConvert.DeserializeObject<List<T>>(json);
         }
 
     }
