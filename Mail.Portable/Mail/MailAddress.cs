@@ -117,6 +117,9 @@ namespace SendGrid.Net.Mail
 
         #endregion
 
-
+        public override string ToString()
+        {
+            return Address;
+        }
     }
 }

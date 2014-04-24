@@ -432,9 +432,9 @@ namespace SendGrid
         /// <param name="headers">key substitutionValues pairs</param>
         public void AddHeaders(IDictionary<string, string> headers)
         {
-            foreach (var k in Headers.Keys.ToList())
+            foreach (var k in headers.Keys.ToList())
             {
-                _message.Headers.Add(k, Headers[k]);
+                _message.Headers.Add(k, headers[k]);
             }
         }
 

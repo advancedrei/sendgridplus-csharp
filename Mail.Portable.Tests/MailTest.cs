@@ -316,7 +316,7 @@ namespace SendGrid.Tests
             message.Html = html;
             message.AddTo("foo@bar.com");
             message.From = new MailAddress("foo@bar.com");
-            message.AddHeaders(new Dictionary<string, string>{{headers.Key, headers.Value}});
+            message.AddHeaders(new Dictionary<string, string>{{"custom", "header"}});
             message.EnableGravatar();
 
             var mime = message.CreateMimeMessage();

@@ -62,6 +62,13 @@ namespace SendGrid
         public string SendGridId { get; set; }
 
         /// <summary>
+        /// An id attached to the message by the originating system.
+        /// </summary>
+        /// <remarks>Applies to all message types. Optional.</remarks>
+        [JsonProperty("smtp-id")]
+        public string SmtpId { get; set; }
+
+        /// <summary>
         /// 3 digit status code.
         /// </summary>
         /// <remarks>Applies to only the Bounce event.</remarks>
