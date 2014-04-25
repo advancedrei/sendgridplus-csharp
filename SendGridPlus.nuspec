@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>SendGridPlus</id>
-        <version>4.0.0-Beta3</version>
+        <version>4.0.0-RC1</version>
         <title>SendGridPlus</title>
         <authors>CJ Buchmann,Tyler Bischel,Eric Becking,Robert McLaws</authors>
         <owners>AdvancedREI</owners>
@@ -14,8 +14,9 @@
   • BREAKING: The "Deliver" method has been changed to "DeliverAsync" and is now async-only. This is an intentional change so that you have to update your code, since these are high-latency calls.
   • Integrates some of the changes from the official library, including a dependence on our flavor of their new SMTPAPI library.
   • Improvements to attachment handling thanks to HakanL.
-  • Fixes an issue with Events not processing properly due to malformed requests coming from SendGrid.
+  • Fixes several issues with Events not processing properly due to malformed requests coming from SendGrid.
   • Fixes an issue where the Web transport was using the wrong URL.
+  • Fixes an issue where additional custom Headers were not being attached to an e-mail.
 
 3.1
   • Now includes a Portable Class Library for use in Silverlight 5 and Windows Phone 8. Use the Web transport for delivery.

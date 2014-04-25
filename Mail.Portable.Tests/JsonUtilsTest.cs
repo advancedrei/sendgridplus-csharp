@@ -1,6 +1,4 @@
-﻿using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SendGrid;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SendGrid.Tests
 {
