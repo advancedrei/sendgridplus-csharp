@@ -31,10 +31,7 @@
 //
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
 using System.Text;
 
 namespace SendGrid.Net.Mime
@@ -161,7 +158,7 @@ namespace SendGrid.Net.Mime
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             Encoding enc = CharSet != null ? Encoding.GetEncoding(CharSet) : Encoding.UTF8;
             sb.Append(MediaType);
             if (Parameters != null && Parameters.Count > 0)
@@ -213,7 +210,7 @@ namespace SendGrid.Net.Mime
         static char[] hex = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
         internal static string To2047(byte[] bytes)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (byte i in bytes)
             {
                 if (i < 0x21 || i > 0x7E || i == '?' || i == '=' || i == '_')

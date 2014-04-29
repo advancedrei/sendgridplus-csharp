@@ -75,7 +75,7 @@ namespace SendGrid.Transport
 #if NET40
             var response = client.PostAsync(Endpoint + ".xml", content).Result;
 #elif NET45
-            var response = await client.PostAsync(Endpoint + ".xml", content);
+            var response = await client.PostAsync(Endpoint + ".xml", content).ConfigureAwait(false);
 #endif
             CheckForErrors(response);
         }

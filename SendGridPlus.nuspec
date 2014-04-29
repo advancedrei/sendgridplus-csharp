@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>SendGridPlus</id>
-        <version>4.0.0-RC1</version>
+        <version>4.0.0</version>
         <title>SendGridPlus</title>
         <authors>CJ Buchmann,Tyler Bischel,Eric Becking,Robert McLaws</authors>
         <owners>AdvancedREI</owners>
@@ -36,23 +36,23 @@
   • Update to ensure the stream passed into the Events API is always readable.
 </releaseNotes>
         <copyright>Copyright © 2012-2014 SendGrid and AdvancedREI, LLC.</copyright>
-        <tags>SendGrid Email Mail Microsoft Azure SystemNetMail</tags>
+        <tags>SendGrid Email Mail Microsoft Azure SystemNetMail Universal Portable PCL</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.5">
-                <dependency id="SendGrid.SmtpApiPlus" version="1.0.0" />
-                <dependency id="Newtonsoft.Json" version="6.0.1" />
-                <dependency id="Microsoft.Net.Http" version="2.2.18" />
+                <dependency id="SendGrid.SmtpApiPlus" version="1.0.1" />
+                <dependency id="Newtonsoft.Json" version="6.0.3" />
+                <dependency id="Microsoft.Net.Http" version="2.2.20" />
             </group>
             <group targetFramework=".NETFramework4.0">
-                <dependency id="SendGrid.SmtpApiPlus" version="1.0.0" />
-                <dependency id="Newtonsoft.Json" version="6.0.1" />
-                <dependency id="Microsoft.Net.Http" version="2.2.18" />
+                <dependency id="SendGrid.SmtpApiPlus" version="1.0.1" />
+                <dependency id="Newtonsoft.Json" version="6.0.3" />
+                <dependency id="Microsoft.Net.Http" version="2.2.20" />
             </group>
-            <group targetFramework=".NETPortable0.0-sl5+wp8">
-                <dependency id="SendGrid.SmtpApiPlus" version="1.0.0" />
-                <dependency id="PCLStorage" version="0.2.1-pre" />
-                <dependency id="Microsoft.Net.Http" version="2.2.18" />
-                <dependency id="Newtonsoft.Json" version="6.0.1" />
+            <group targetFramework=".NETPortable0.0-sl5+wp8+win8+wpa81+monotouch+monoandroid">
+                <dependency id="SendGrid.SmtpApiPlus" version="1.0.1" />
+                <dependency id="PCLStorage" version="0.9.6" />
+                <dependency id="Microsoft.Net.Http" version="2.2.20" />
+                <dependency id="Newtonsoft.Json" version="6.0.3" />
             </group>
         </dependencies>
     </metadata>
@@ -63,9 +63,9 @@
         <file src="Mail.NET45\bin\Release\SendGridPlus.dll" target="lib\net45\SendGridPlus.dll" />
         <file src="Mail.NET45\bin\Release\SendGridPlus.pdb" target="lib\net45\SendGridPlus.pdb" />
         <file src="Mail.NET45\bin\Release\SendGridPlus.xml" target="lib\net45\SendGridPlus.xml" />
-        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.dll" target="lib\portable-sl5+wp8+monotouch+monoandroid\SendGridPlus.Portable.dll" />
-        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.pdb" target="lib\portable-sl5+wp8+monotouch+monoandroid\SendGridPlus.Portable.pdb" />
-        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.xml" target="lib\portable-sl5+wp8+monotouch+monoandroid\SendGridPlus.Portable.xml" />
+        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.dll" target="lib\portable-sl5+wp8+win8+wpa81+monotouch+monoandroid\SendGridPlus.Portable.dll" />
+        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.pdb" target="lib\portable-sl5+wp8+win8+wpa81+monotouch+monoandroid\SendGridPlus.Portable.pdb" />
+        <file src="Mail.Portable\bin\Release\SendGridPlus.Portable.xml" target="lib\portable-sl5+wp8+win8+wpa81+monotouch+monoandroid\SendGridPlus.Portable.xml" />
         <file src="Mail.Net45\**\*.cs" exclude="**\obj\**\*.*" target="src" />
     </files>
 </package>
