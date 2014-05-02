@@ -35,8 +35,7 @@ namespace SendGrid
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            // Left as an exercise to the reader :)
-            throw new NotImplementedException();
+            serializer.Serialize(writer, value);
         }
     }
 }

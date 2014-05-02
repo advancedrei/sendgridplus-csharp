@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace SendGrid.Tests
 {
@@ -297,6 +298,22 @@ namespace SendGrid.Tests
             Assert.IsTrue(result[1].EventName == "dropped");
             Assert.IsTrue(result[2].EmailAddress == "john.doe@sendgrid.com");
             Assert.IsTrue(result[2].Categories.Count == 3);
+        }
+
+        [TestMethod]
+        public void GetEventsTest_SerializeEvents()
+        {
+            var result = Events.GetEvents(payload6);
+            var serialized = JsonConvert.SerializeObject(result);
+            
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(List<EventData>));
+            Assert.IsTrue(result.Count == 7);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(serialized));
+
+
+
         }
 
     }

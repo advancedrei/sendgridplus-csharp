@@ -4,13 +4,17 @@ using Newtonsoft.Json;
 
 namespace SendGrid
 {
+    
     public class EventData
     {
+
+        #region Properties
 
         /// <summary>
         /// The number of times this delivery has been attempted.
         /// </summary>
         /// <remarks>Applies to the Deferred event.</remarks>
+        [JsonProperty("attempt")]
         public int Attempt { get; set; }
 
         /// <summary>
@@ -46,12 +50,14 @@ namespace SendGrid
         /// Bounce or Drop reason from MTA
         /// </summary>
         /// <remarks>Applies to only the Bounce and Drop events.</remarks>
+        [JsonProperty("reason")]
         public string Reason { get; set; }
 
         /// <summary>
         /// Full reponse from MTA.
         /// </summary>
         /// <remarks>Applies to only the Deferred and Delivered events.</remarks>
+        [JsonProperty("response")]
         public string Response { get; set; }
 
         /// <summary>
@@ -72,17 +78,20 @@ namespace SendGrid
         /// 3 digit status code.
         /// </summary>
         /// <remarks>Applies to only the Bounce event.</remarks>
+        [JsonProperty("status")]
         public string Status { get; set; }
 
         /// <summary>
         /// The Unix Time that the event occurred.
         /// </summary>
+        [JsonProperty("timestamp")]
         public Int64 TimeStamp { get; set; }
 
         /// <summary>
         /// Bounce/Blocked/Expired
         /// </summary>
         /// <remarks>Applies to only the Bounce event.</remarks>
+        [JsonProperty("type")]
         public string Type { get; set; }
 
         /// <summary>
@@ -96,13 +105,30 @@ namespace SendGrid
         /// The URL that was clicked.
         /// </summary>
         /// <remarks>Applies to only the Click event.</remarks>
+        [JsonProperty("url")]
         public string Url { get; set; }
 
         /// <summary>
         /// The user agent responsible for the event
         /// </summary>
         /// <remarks>Applies to all message types.</remarks>
+        [JsonProperty("useragent")]
         public string UserAgent { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public EventData()
+        {
+            Categories = new List<string>();
+            UniqueArguments = new Dictionary<string, string>();
+        }
+
+        #endregion
 
     }
 }

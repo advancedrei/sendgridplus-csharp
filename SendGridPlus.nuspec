@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>SendGridPlus</id>
-        <version>4.0.0</version>
+        <version>4.1</version>
         <title>SendGridPlus</title>
         <authors>CJ Buchmann,Tyler Bischel,Eric Becking,Robert McLaws</authors>
         <owners>AdvancedREI</owners>
@@ -10,7 +10,11 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>A client library for interfacing with the SendGrid APIs, including the Event API. This is an updated and refactored version of the SendGrid package.</description>
         <summary>A client library for interfacing with the SendGrid APIs, including the Event API.</summary>
-        <releaseNotes>4.0
+        <releaseNotes>4.1
+  • Fixes for re-serializing the EventData object (for example, to drop the Event into a Windows Azure Queue for processing).
+
+4.0
+  • Added Windows Phone 8.1 / Universal Apps support.
   • BREAKING: The "Deliver" method has been changed to "DeliverAsync" and is now async-only. This is an intentional change so that you have to update your code, since these are high-latency calls.
   • Integrates some of the changes from the official library, including a dependence on our flavor of their new SMTPAPI library.
   • Improvements to attachment handling thanks to HakanL.
